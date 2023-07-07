@@ -549,10 +549,11 @@ class MMapIndexedDatasetBuilder(object):
         self._dtype = dtype
         self._sizes = []
         self._doc_idx = [0]
-
+    # 把序列写进文件
     def add_item(self, tensor):
         np_array = np.array(tensor.numpy(), dtype=self._dtype)
         self._data_file.write(np_array.tobytes(order='C'))
+        # 长度和文件行数一致，保存了每行序列的长度
         self._sizes.append(np_array.size)
 
     def add_doc(self, tensor, sizes):
@@ -562,10 +563,12 @@ class MMapIndexedDatasetBuilder(object):
         self._doc_idx.append(len(self._sizes))
 
     def end_document(self):
+        # 索引；有100行样本，则list就是1到100；
         self._doc_idx.append(len(self._sizes))
-
+        
     def merge_file_(self, another_file):
         # Concatenate index
+        # 不需要传后缀
         index = MMapIndexedDataset.Index(index_file_path(another_file))
         assert index.dtype == self._dtype
 
