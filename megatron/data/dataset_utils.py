@@ -506,6 +506,7 @@ def _build_train_valid_test_datasets(data_prefix, data_impl, splits_string,
     # Note that doc-idx is desinged to be num-docs + 1 so we can
     # easily iterate over it.
     total_num_of_documents = indexed_dataset.doc_idx.shape[0] - 1
+    # splits_string大概就是'100,200,300'然后划分出前100个是训练集，100到200是测试集，200到300是验证集（大概是这样）
     splits = get_train_valid_test_split_(splits_string, total_num_of_documents)
 
     # Print stats about the splits.
